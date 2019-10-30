@@ -38,7 +38,29 @@ shift
 
 EXTENTIONS=( "$@" )
 
+#echo BACKUP_PATH=$BACKUP_PATH
+#echo BACKUP_DIR=$BACKUP_DIR
+#echo ARCHIVE_PATH=$ARCHIVE_PATH
+
 if [[ $HELP -eq 0 ]]; then
 	echo help	# TODO
 	exit 0
 fi
+
+TEST_COMMAND=("-true")
+
+#echo ${#TEST_COMMAND[*]}
+
+if [[ ${#EXTENTIONS[*]} -ne 0 ]]; then
+	TEST_COMMAND=("-false")
+	for EXT in "${EXTENTIONS[@]}"; do
+		TEST_COMMAND=(${TEST_COMMAND[*]} -o -iname "'*.$EXT'")
+	done
+fi
+
+TEST_COMMAND=(-type f "'('" ${TEST_COMMAND[*]} "')'" )
+
+echo ${TEST_COMMAND[*]}
+#TEST_COMMAND=(-type f)
+#echo ${#TEST_COMMAND[*]}
+( cd $BACKUP_PATH && eval "find ${TEST_COMMAND[*]} -print" )
