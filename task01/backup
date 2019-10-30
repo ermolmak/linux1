@@ -1,0 +1,44 @@
+#!/bin/bash
+
+BACKUP_PATH=.
+BACKUP_DIR=./backup_dir
+EXTENTIONS=''
+ARCHIVE_PATH=./backup.tar
+HELP=1
+
+OPTIONS=$(getopt -o h,p:,d:,o: --long help,path:,dir:,output: -- "$@")
+[[ $? -eq 0 ]] || {
+	exit 1
+}
+
+eval set -- "$OPTIONS"
+
+while [[ "$1" != "--" ]]; do
+	case "$1" in
+		"-h" | "--help" )
+			HELP=0
+			shift
+			;;
+		"-p" |  "--path" )
+			BACKUP_PATH="$2"
+			shift; shift
+			;;
+		"-d" |  "--dir" )
+			BACKUP_DIR="$2"
+			shift; shift
+			;;
+		"-o" |  "--output" )
+			ARCHIVE_PATH="$2"
+			shift; shift
+			;;
+	esac
+done
+
+shift
+
+EXTENTIONS=( "$@" )
+
+if [[ $HELP -eq 0 ]]; then
+	echo help	# TODO
+	exit 0
+fi
